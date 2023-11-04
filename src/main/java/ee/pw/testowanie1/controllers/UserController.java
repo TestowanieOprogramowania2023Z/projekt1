@@ -1,6 +1,7 @@
 package ee.pw.testowanie1.controllers;
 
 import ee.pw.testowanie1.models.User;
+import ee.pw.testowanie1.models.UserCreateDTO;
 import ee.pw.testowanie1.models.UserDTO;
 import ee.pw.testowanie1.services.UserService;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,8 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("")
-    public ResponseEntity<List<User>> getAllUsers(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<List<UserDTO>> getAllUsers(@RequestParam(defaultValue = "0") int page,
+                                                     @RequestParam(defaultValue = "5") int size) {
         try {
             return ResponseEntity.ok(userService.getUsers(PageRequest.of(page, size)));
         } catch (Exception e) {
@@ -28,7 +30,7 @@ public class UserController {
     }
 
     @GetMapping("/by-username")
-    public ResponseEntity<User> getUserByUsername(@RequestParam String username) {
+    public ResponseEntity<UserDTO> getUserByUsername(@RequestParam String username) {
         try {
             return ResponseEntity.ok(userService.getUserByUsername(username).orElseThrow());
         } catch (Exception e) {
@@ -37,7 +39,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@RequestParam String id) {
+    public ResponseEntity<UserDTO> getUserById(@RequestParam String id) {
         try {
             return ResponseEntity.ok(userService.getUserById(id).orElseThrow());
         } catch (Exception e) {
@@ -46,7 +48,7 @@ public class UserController {
     }
 
     @PostMapping("")
-    public ResponseEntity<User> createUser(@RequestBody UserDTO user) {
+    public ResponseEntity<User> createUser(@RequestBody UserCreateDTO user) {
         try {
             return ResponseEntity.created(new URI(userService.createUser(user).toString())).build();
         }

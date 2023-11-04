@@ -1,6 +1,7 @@
 package ee.pw.testowanie1.controllers;
 
 import ee.pw.testowanie1.models.Post;
+import ee.pw.testowanie1.models.PostCreateDTO;
 import ee.pw.testowanie1.models.PostDTO;
 import ee.pw.testowanie1.services.PostService;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,8 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("")
-    public ResponseEntity<List<Post>> getAllPosts(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<List<PostDTO>> getAllPosts(@RequestParam(defaultValue = "0") int page,
+                                                     @RequestParam(defaultValue = "5") int size) {
         try {
             return ResponseEntity.ok(postService.getPosts(PageRequest.of(page, size)));
         } catch (Exception e) {
@@ -29,7 +31,7 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Post> getPostById(@PathVariable UUID id) {
+    public ResponseEntity<PostDTO> getPostById(@PathVariable UUID id) {
         try {
             return ResponseEntity.ok(postService.getPostById(id).orElseThrow());
         } catch (Exception e) {
@@ -38,7 +40,9 @@ public class PostController {
     }
 
     @GetMapping("/by-user/{userId}")
-    public ResponseEntity<List<Post>> getPostsByUserId(@PathVariable UUID userId, @RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<List<PostDTO>> getPostsByUserId(@PathVariable UUID userId,
+                                                       @RequestParam(defaultValue = "0") int page,
+                                                       @RequestParam(defaultValue = "5") int size) {
         try {
             return ResponseEntity.ok(postService.getPostsByUserId(userId, PageRequest.of(page, size)));
         } catch (Exception e) {
@@ -47,7 +51,7 @@ public class PostController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Post> createPost(@RequestBody PostDTO post) {
+    public ResponseEntity<Post> createPost(@RequestBody PostCreateDTO post) {
         try {
             return ResponseEntity.created(new URI(postService.createPost(post).toString())).build();
         } catch (Exception e) {
@@ -56,7 +60,7 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Post> updatePost(@PathVariable UUID id, @RequestBody PostDTO post) {
+    public ResponseEntity<Post> updatePost(@PathVariable UUID id, @RequestBody PostCreateDTO post) {
         try {
             postService.updatePost(id, post);
             return ResponseEntity.ok().build();

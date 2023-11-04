@@ -1,6 +1,7 @@
 package ee.pw.testowanie1.services;
 
 import ee.pw.testowanie1.models.User;
+import ee.pw.testowanie1.models.UserCreateDTO;
 import ee.pw.testowanie1.models.UserDTO;
 import ee.pw.testowanie1.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -17,19 +18,19 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public List<User> getUsers(Pageable pageable) {
-        return userRepository.findAll(pageable).getContent();
+    public List<UserDTO> getUsers(Pageable pageable) {
+        return userRepository.findAll(pageable).map(UserDTO::fromUser).stream().toList();
     }
 
-    public Optional<User> getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public Optional<UserDTO> getUserByUsername(String username) {
+        return userRepository.findByUsername(username).map(UserDTO::fromUser);
     }
 
-    public Optional<User> getUserById(String id) {
-        return userRepository.findById(UUID.fromString(id));
+    public Optional<UserDTO> getUserById(String id) {
+        return userRepository.findById(UUID.fromString(id)).map(UserDTO::fromUser);
     }
 
-    public UUID createUser(UserDTO user) {
+    public UUID createUser(UserCreateDTO user) {
         var userWithTheSameUsername = userRepository.findByUsername(user.getUsername());
         if (userWithTheSameUsername.isPresent()) {
             throw new RuntimeException("User with this username already exists");

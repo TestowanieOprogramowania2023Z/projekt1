@@ -1,5 +1,9 @@
 package ee.pw.testowanie1.models;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -9,17 +13,23 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class UserDTO {
-    @NotBlank
-    @Size(min = 3, max = 255, message = "Username must be between 3 and 255 characters")
-    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Username must contain only letters and numbers")
+    private UUID id;
     private String username;
-
-    @NotBlank
-    @Email
     private String email;
+
+    public static UserDTO fromUser(User user) {
+        return UserDTO.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .build();
+    }
 }

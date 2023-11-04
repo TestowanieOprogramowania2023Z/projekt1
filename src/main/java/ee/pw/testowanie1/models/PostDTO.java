@@ -1,5 +1,6 @@
 package ee.pw.testowanie1.models;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -14,10 +16,15 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class PostDTO {
-    @NotBlank
-    @Size(min = 1, max = 1024, message = "Content must be between 1 and 1024 characters")
+    private UUID id;
     private String content;
+    private Date createdAt;
 
-    @NotBlank
-    private UUID userId;
+    public static PostDTO fromPost(Post post) {
+        return PostDTO.builder()
+                .id(post.getId())
+                .content(post.getContent())
+                .createdAt(post.getCreatedAt())
+                .build();
+    }
 }
