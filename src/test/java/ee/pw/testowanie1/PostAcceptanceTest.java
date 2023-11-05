@@ -26,7 +26,6 @@ public class PostAcceptanceTest {
 
         UUID id = UUID.randomUUID();
 
-        // Delete the post
         given()
                 .when()
                 .delete("/api/posts/" + id)

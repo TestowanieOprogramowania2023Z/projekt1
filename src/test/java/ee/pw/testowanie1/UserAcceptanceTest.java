@@ -25,8 +25,7 @@ public class UserAcceptanceTest {
     public void CheckTheEndpointWithCorrectIdTest() {
 
         UUID id = UUID.randomUUID();
-
-        // Delete the post
+        
         given()
                 .when()
                 .delete("/api/users/" + id)
