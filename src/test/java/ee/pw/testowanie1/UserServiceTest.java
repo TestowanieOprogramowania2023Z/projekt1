@@ -20,7 +20,7 @@ public class UserServiceTest {
     private UserRepository userRepository;
 
     @Test
-    public void CheckIfServiceCallsRepositoryDeleteMethodTest() {
+    public void shouldCallRepositoryDeleteMethod() {
         // Arrange
         UUID id = UUID.randomUUID();
 

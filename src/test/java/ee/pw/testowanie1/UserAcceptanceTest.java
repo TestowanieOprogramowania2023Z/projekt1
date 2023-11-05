@@ -22,10 +22,10 @@ public class UserAcceptanceTest {
     }
 
     @Test
-    public void CheckTheEndpointWithCorrectIdTest() {
+    public void shouldReturnOkStatus() {
 
         UUID id = UUID.randomUUID();
-        
+
         given()
                 .when()
                 .delete("/api/users/" + id)
@@ -34,7 +34,7 @@ public class UserAcceptanceTest {
     }
 
     @Test
-    public void CheckTheEndpointWithWrongIdTest() {
+    public void shouldReturnBadRequestStatus() {
 
         given()
                 .when()

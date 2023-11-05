@@ -22,7 +22,7 @@ public class PostServiceTest {
     private PostRepository postRepository;
 
     @Test
-    public void CheckIfServiceCallsRepositoryDeleteMethodTest() {
+    public void shouldCallRepositoryDeleteMethod() {
         // Arrange
         UUID id = UUID.randomUUID();
 

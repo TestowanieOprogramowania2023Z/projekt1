@@ -40,7 +40,7 @@ public class PostIntegrationTest {
     private final UUID id = UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
 
     @Test
-    public void CheckIfPostWasDeletedTest() {
+    public void shouldDeleteThePost() {
 
         //Arrange
         UserCreateDTO user = UserCreateDTO.builder()
@@ -66,14 +66,14 @@ public class PostIntegrationTest {
     }
 
     @Test
-    public void CheckDeletePostEndpointWithCorrectIdTest() throws Exception {
+    public void shouldReturnIsOkBecauseOfCorrectId() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/posts/" + id))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void CheckDeletePostEndpointWithWrongIdTest() throws Exception {
+    public void shouldReturnBadRequestBecauseOfBadId() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/posts/wrong"))
                 .andExpect(status().isBadRequest());

@@ -34,7 +34,7 @@ public class UserIntegrationTest {
     private final UUID id = UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
 
     @Test
-    public void CheckIfUserWasDeletedTest() {
+    public void shouldDeleteTheUser() {
 
         //Arrange
         UserCreateDTO user = UserCreateDTO.builder()
@@ -55,14 +55,14 @@ public class UserIntegrationTest {
     }
 
     @Test
-    public void CheckDeleteUserEndpointWithCorrectIdTest() throws Exception {
+    public void shouldReturnIsOkBecauseOfCorrectIdTest() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/users/" + id))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void CheckDeleteUserEndpointWithWrongTest() throws Exception {
+    public void shouldReturnBadRequestBecauseOfBadIdTest() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/users/wrong"))
                 .andExpect(status().isBadRequest());

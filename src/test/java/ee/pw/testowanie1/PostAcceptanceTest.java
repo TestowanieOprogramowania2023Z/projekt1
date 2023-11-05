@@ -22,7 +22,7 @@ public class PostAcceptanceTest {
     }
 
     @Test
-    public void CheckTheEndpointWithCorrectIdTest() {
+    public void deletePostEndpointShouldReturnOkStatus() {
 
         UUID id = UUID.randomUUID();
 
@@ -34,7 +34,7 @@ public class PostAcceptanceTest {
     }
 
     @Test
-    public void CheckTheEndpointWithWrongIdTest() {
+    public void deletePostEndpointShouldReturnBadRequestStatus() {
 
         given()
                 .when()

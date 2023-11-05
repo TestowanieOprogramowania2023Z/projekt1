@@ -20,7 +20,7 @@ public class PostControllerTest {
     private PostService postService;
 
     @Test
-    public void CheckIfPostControllerCallsServiceDeleteMethodTest() {
+    public void shouldCallServiceDeleteMethod() {
         // Arrange
         UUID id = UUID.randomUUID();
 

@@ -22,7 +22,7 @@ public class UserControllerTest {
     private UserService userService;
 
     @Test
-    public void CheckIfControllerCallsServiceDeleteMethodTest() {
+    public void shouldCallServiceDeleteMethod() {
         // Arrange
         UUID id = UUID.randomUUID();
 
