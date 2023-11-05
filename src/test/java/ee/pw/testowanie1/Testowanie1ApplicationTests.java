@@ -1,6 +1,7 @@
 package ee.pw.testowanie1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ee.pw.testowanie1.controllers.UserController;
 import ee.pw.testowanie1.models.PostCreateDTO;
 import ee.pw.testowanie1.models.UserCreateDTO;
 import ee.pw.testowanie1.repositories.PostRepository;
@@ -9,7 +10,6 @@ import ee.pw.testowanie1.services.PostService;
 import ee.pw.testowanie1.services.UserService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,12 +17,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,8 +44,8 @@ class Testowanie1ApplicationTests {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Mock
     private UserService userService;
+
 
     @Test
     @Transactional
@@ -78,6 +80,37 @@ class Testowanie1ApplicationTests {
         });
     }
 
+    @Test
+    @Transactional
+    @Rollback(value = true)
+    public void integralTestPostControllerCreatePost() throws Exception {
+        UserCreateDTO user = new UserCreateDTO();
+        user.setUsername("Maciej");
+        user.setEmail("test@test.com");
+        userService = new UserService(repoUser);
+        UserController userController = new UserController(userService);
+        userController.createUser(user);
+        UUID userUUID = userController.getUserByUsername("Maciej").getBody().getId();
+
+        PostCreateDTO post = new PostCreateDTO();
+        post.setContent("test");
+        post.setUserId(userUUID);
+
+        mockMvc.perform(post("/api/posts")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(post)))
+                .andExpect(status().isCreated());
+
+        MvcResult result = mockMvc.perform(get("/api/posts"))
+                .andReturn();
+
+        String responseContent = result.getResponse().getContentAsString();
+        boolean postAdded = responseContent.contains("test");
+
+        assertTrue(postAdded);
+    }
+
+
     //checking correct integration of controller and userService
     @Test
     @Transactional
@@ -86,16 +119,17 @@ class Testowanie1ApplicationTests {
         UserCreateDTO user = new UserCreateDTO();
         user.setUsername("Maciej");
         user.setEmail("test@test.com");
+        userService = new UserService(repoUser);
+        UserController userController = new UserController(userService);
 
-        MvcResult result;
 
-        result =  mockMvc.perform(post("/api/users")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(user)))
-                    .andReturn();
+        userController.createUser(user);
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
+                .andReturn();
 
-        String requestContent = result.getRequest().getContentAsString();
-        boolean userAdded = requestContent.contains("Maciej");
+        String responseContent = result.getResponse().getContentAsString();
+        boolean userAdded = responseContent.contains("Maciej");
+
         assertTrue(userAdded);
     }
 
@@ -116,25 +150,6 @@ class Testowanie1ApplicationTests {
     @Test
     @Transactional
     @Rollback(value = true)
-    public void integralTestPostControllerCreatePost() throws Exception {
-        PostCreateDTO post = new PostCreateDTO();
-        post.setContent("test");
-
-        MvcResult result;
-
-        result = mockMvc.perform(post("/api/posts")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(post)))
-                .andReturn();
-
-        String requestContent = result.getRequest().getContentAsString();
-        boolean postAdded = requestContent.contains("test");
-        assertTrue(postAdded);
-    }
-
-    @Test
-    @Transactional
-    @Rollback(value = true)
     public void acceptanceTestPostControllerCreateUser() throws Exception {
         PostCreateDTO post = PostCreateDTO.builder().content("Maciej").build();
 
@@ -147,5 +162,3 @@ class Testowanie1ApplicationTests {
     }
 
 }
-
-
