@@ -35,9 +35,16 @@ class PostServiceUnitTest {
     UUID postID = UUID.randomUUID();
     String postContentBeforeUpdate = "Content before update";
     String postContentAfterUpdate = "Updated content";
-    PostCreateDTO postCreateDTO = new PostCreateDTO().builder()
-        .content(postContentAfterUpdate).userId(postID).build();
-    Post post = new Post().builder().id(postID).content(postContentBeforeUpdate).build();
+    PostCreateDTO postCreateDTO = new PostCreateDTO()
+        .builder()
+        .content(postContentAfterUpdate)
+        .userId(postID)
+        .build();
+    Post post = new Post()
+        .builder()
+        .id(postID)
+        .content(postContentBeforeUpdate)
+        .build();
 
     //when
     when(postRepository.findById(any(UUID.class))).thenReturn(Optional.of(post));
@@ -45,8 +52,11 @@ class PostServiceUnitTest {
 
     //then
     ArgumentCaptor<Post> postArgumentCaptor = ArgumentCaptor.forClass(Post.class);
+
     verify(postRepository).save(postArgumentCaptor.capture());
+
     Post capturedPost = postArgumentCaptor.getValue();
+
     assertThat(capturedPost.getContent()).isEqualTo(postContentAfterUpdate);
   }
 
@@ -54,11 +64,7 @@ class PostServiceUnitTest {
   void updatePost_checkIfThrowsCorrectException_whenPostDoesNotExistsInDB() {
     //given
     UUID postID = UUID.randomUUID();
-    String postContentBeforeUpdate = "Content before update";
-    String postContentAfterUpdate = "Updated content";
-    PostCreateDTO postCreateDTO = new PostCreateDTO().builder()
-        .content(postContentAfterUpdate).userId(postID).build();
-    Post post = new Post().builder().id(postID).content(postContentBeforeUpdate).build();
+    PostCreateDTO postCreateDTO = new PostCreateDTO();
 
     //when
     when(postRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
@@ -70,15 +76,10 @@ class PostServiceUnitTest {
   }
 
   @Test
-  void updatePost_checkIfDoesntSavePostAfterThrowingException_whenPostDoesNotExistsInDB() {
+  void updatePost_checkIfDoesntSaveInDB_whenPostDoesNotExistsInDB() {
     //given
     UUID postID = UUID.randomUUID();
-    String postContentBeforeUpdate = "Content before update";
-    String postContentAfterUpdate = "Updated content";
-    PostCreateDTO postCreateDTO = new PostCreateDTO().builder()
-        .content(postContentAfterUpdate).userId(postID).build();
-    Post post = new Post().builder().id(postID).content(postContentBeforeUpdate).build();
-
+    PostCreateDTO postCreateDTO = new PostCreateDTO();
     //when
     when(postRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
     try {
