@@ -42,4 +42,14 @@ public class UserAcceptanceTest {
                 .then()
                 .statusCode(400);
     }
+
+    @Test
+    public void testGetAllUsers() {
+
+        given()
+                .when()
+                .get("/api/users")
+                .then()
+                .statusCode(200);
+    }
 }
