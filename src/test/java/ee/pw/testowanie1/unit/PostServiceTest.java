@@ -51,9 +51,30 @@ class PostServiceTest {
     @Test
     void getPosts_ReturnsCorrectPostDTOList_WhenThereArePostsInDB() {
         // given
-        Post post1 = Post.builder().id(UUID.randomUUID()).user(User.builder().id(UUID.randomUUID()).build()).content("Content1").createdAt(new Date()).build();
-        Post post2 = Post.builder().id(UUID.randomUUID()).user(User.builder().id(UUID.randomUUID()).build()).content("Content2").createdAt(new Date()).build();
-        Post post3 = Post.builder().id(UUID.randomUUID()).user(User.builder().id(UUID.randomUUID()).build()).content("Content3").createdAt(new Date()).build();
+        Post post1 = Post.builder()
+                .id(UUID.randomUUID())
+                .user(User.builder()
+                        .id(UUID.randomUUID())
+                        .build())
+                .content("Content1")
+                .createdAt(new Date())
+                .build();
+        Post post2 = Post.builder()
+                .id(UUID.randomUUID())
+                .user(User.builder()
+                        .id(UUID.randomUUID())
+                        .build())
+                .content("Content2")
+                .createdAt(new Date())
+                .build();
+        Post post3 = Post.builder()
+                .id(UUID.randomUUID())
+                .user(User.builder()
+                        .id(UUID.randomUUID())
+                        .build())
+                .content("Content3")
+                .createdAt(new Date())
+                .build();
         List<Post> postsInDB = Arrays.asList(post1, post2, post3);
 
         when(postRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(postsInDB));
@@ -107,6 +128,18 @@ class PostServiceTest {
         Optional<PostDTO> expected = Optional.of(PostDTO.fromPost(postInDB));
         assertEquals(expected, actual);
     }
+    
+    @Test
+    void getPostById_ThrowsIllegalArgumentException_WhenIdIsNull() {
+        // given
+        UUID id = null;
+
+        // when
+        Assertions.assertThrows(IllegalArgumentException.class, () -> postService.getPostById(id));
+
+        // then
+        verify(postRepository, never()).findById(any(UUID.class));
+    }
 
     @Test
     void getPostsByUserId_CallsRepoFindAllByUserId_GivenRandomPageAndRandomUserId() {
@@ -146,6 +179,19 @@ class PostServiceTest {
         List<PostDTO> expected = wantedPosts.stream().map(PostDTO::fromPost).toList();
         assertIterableEquals(expected, actual);
     }
+    
+    @Test
+    void getPostsByUserId_ThrowsIllegalArgumentException_WhenIdIsNull() {
+        // given
+        UUID id = null;
+        Pageable randomPage = PageRequest.of(0, 10);
+
+        // when
+        Assertions.assertThrows(IllegalArgumentException.class, () -> postService.getPostsByUserId(id, randomPage));
+
+        // then
+        verify(postRepository, never()).findAllByUserId(any(UUID.class), any(Pageable.class));
+    }
 
     @Test
     public void shouldCallRepositoryDeleteMethod() {
@@ -157,6 +203,18 @@ class PostServiceTest {
 
         // Assert
         verify(postRepository).deleteById(id);
+    }
+    
+    @Test
+    void deletePost_ThrowsIllegalArgumentException_WhenIdIsNull() {
+        // given
+        UUID id = null;
+
+        // when
+        Assertions.assertThrows(IllegalArgumentException.class, () -> postService.deletePost(id));
+
+        // then
+        verify(postRepository, never()).deleteById(any(UUID.class));
     }
 
 
@@ -220,5 +278,39 @@ class PostServiceTest {
         verify(postRepository, never()).save(any());
     }
 
+    @Test
+    void updatePost_throwsIllegalArgumentException_whenPostIDIsNull() {
+        //given
+        UUID postID = null;
+        PostCreateDTO postCreateDTO = new PostCreateDTO();
+        
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> postService.updatePost(postID, postCreateDTO));
+    }
+    
+    @Test
+    void createPost_throwsIllegalArgumentException_whenPostIsNull() {
+        //given
+        PostCreateDTO postCreateDTO = null;
+        
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> postService.createPost(postCreateDTO));
+    }
+    
+    @Test
+    void createPost_callsRepoMethod_whenPostIsValid() {
+        //given
+        PostCreateDTO postCreateDTO = PostCreateDTO.builder()
+                .content("Content")
+                .userId(UUID.randomUUID())
+                .build();
+        
+        when(postRepository.save(any())).thenReturn(Post.builder().id(UUID.randomUUID()).build());
+        //when
+        postService.createPost(postCreateDTO);
+        
+        //then
+        verify(postRepository).save(any());
+    }
 
 }
