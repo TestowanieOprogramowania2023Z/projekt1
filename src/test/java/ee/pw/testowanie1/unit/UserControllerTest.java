@@ -1,6 +1,8 @@
 package ee.pw.testowanie1.unit;
 
 import ee.pw.testowanie1.controllers.UserController;
+import ee.pw.testowanie1.models.User;
+import ee.pw.testowanie1.models.UserCreateDTO;
 import ee.pw.testowanie1.models.UserDTO;
 import ee.pw.testowanie1.services.UserService;
 import org.junit.jupiter.api.Test;
@@ -17,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import java.util.List;
 import java.util.UUID;
@@ -87,6 +90,77 @@ public class UserControllerTest {
                 .thenThrow(new RuntimeException());
 
         ResponseEntity<List<UserDTO>> responseEntity = userController.getAllUsers(page, size);
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+    }
+    
+    @Test
+    void getUserById_returnIsOk_whenCorrectDataProvided() {
+        UUID id = UUID.randomUUID();
+
+        when(userService.getUserById(any())).thenReturn(java.util.Optional.of(new UserDTO()));
+
+        ResponseEntity<UserDTO> responseEntity = userController.getUserById(id.toString());
+
+        verify(userService).getUserById(id.toString());
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertNotNull(responseEntity.getBody());
+    }
+    
+    @Test
+    void getUserById_returnBadRequest_whenServiceThrowsException() {
+        UUID id = UUID.randomUUID();
+
+        when(userService.getUserById(any())).thenThrow(new RuntimeException());
+
+        ResponseEntity<UserDTO> responseEntity = userController.getUserById(id.toString());
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+    }
+    
+    @Test
+    void getUserByUsername_returnIsOk_whenCorrectDataProvided() {
+        String username = "username";
+
+        when(userService.getUserByUsername(any())).thenReturn(java.util.Optional.of(new UserDTO()));
+
+        ResponseEntity<UserDTO> responseEntity = userController.getUserByUsername(username);
+
+        verify(userService).getUserByUsername(username);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertNotNull(responseEntity.getBody());
+    }
+    
+    @Test
+    void getUserByUsername_returnBadRequest_whenServiceThrowsException() {
+        String username = "username";
+
+        when(userService.getUserByUsername(any())).thenThrow(new RuntimeException());
+
+        ResponseEntity<UserDTO> responseEntity = userController.getUserByUsername(username);
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+    }
+    
+    @Test
+    void createUser_returnIsCreated_whenCorrectDataProvided() {
+        var user = new UserCreateDTO();
+
+        when(userService.createUser(any())).thenReturn(UUID.randomUUID());
+
+        ResponseEntity<User> responseEntity = userController.createUser(user);
+
+        verify(userService).createUser(user);
+        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+    }
+    
+    @Test
+    void createUser_returnBadRequest_whenServiceThrowsException() {
+        var user = new UserCreateDTO();
+
+        when(userService.createUser(any())).thenThrow(new RuntimeException());
+
+        ResponseEntity<User> responseEntity = userController.createUser(user);
 
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }

@@ -19,8 +19,8 @@ import java.util.UUID;
 @RequestMapping("/api/users")
 @AllArgsConstructor
 public class UserController {
+    
     private final UserService userService;
-
     
     @GetMapping("")
     public ResponseEntity<List<UserDTO>> getAllUsers(@RequestParam(defaultValue = "0") int page,
