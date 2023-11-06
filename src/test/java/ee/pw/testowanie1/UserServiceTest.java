@@ -121,7 +121,7 @@ public class UserServiceTest {
                 .thenReturn(Page.empty());
 
         List<UserDTO> result = userService.getUsers(pageable);
-        
+
         assertEquals(0, result.size());
     }
 
