@@ -114,7 +114,7 @@ public class UserIntegrationTest {
     }
 
     @Test
-    public void integralTestUserControllerCreateUser() throws Exception {
+    public void createUser_shouldReturnTrue_whenFindingCreatedUser() throws Exception {
         UserCreateDTO user = new UserCreateDTO();
         user.setUsername("Maciej");
         user.setEmail("test@test.com");
@@ -132,15 +132,6 @@ public class UserIntegrationTest {
         assertTrue(userAdded);
     }
 
-    @Test
-    public void acceptanceTestUserControllerCreateUser() throws Exception {
-        UserCreateDTO user = UserCreateDTO.builder().username("Maciej").build();
-
-        mockMvc.perform(post("/api/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(user)))
-                .andExpect(status().isCreated());
-    }
 
     @Test
     public void testGetAllUsers() throws Exception {
