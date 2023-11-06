@@ -30,7 +30,7 @@ class PostServiceUnitTest {
 
   //unit test
   @Test
-  void updatePost_checkIfContentIsProperlyUpdated_whenPostExistsInDB() {
+  void updatePost_contentIsProperlyUpdated_whenPostExistsInDB() {
     //given
     UUID postID = UUID.randomUUID();
     String postContentBeforeUpdate = "Content before update";
@@ -61,7 +61,7 @@ class PostServiceUnitTest {
   }
 
   @Test
-  void updatePost_checkIfThrowsCorrectException_whenPostDoesNotExistsInDB() {
+  void updatePost_throwsCorrectException_whenPostDoesNotExistsInDB() {
     //given
     UUID postID = UUID.randomUUID();
     PostCreateDTO postCreateDTO = new PostCreateDTO();
@@ -76,7 +76,7 @@ class PostServiceUnitTest {
   }
 
   @Test
-  void updatePost_checkIfDoesntSaveInDB_whenPostDoesNotExistsInDB() {
+  void updatePost_doesntCallSaveInDB_whenPostDoesNotExistsInDB() {
     //given
     UUID postID = UUID.randomUUID();
     PostCreateDTO postCreateDTO = new PostCreateDTO();
