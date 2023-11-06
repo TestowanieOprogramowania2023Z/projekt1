@@ -33,7 +33,7 @@ public class UserControllerTest {
     private UserService userService;
 
     @Test
-    public void shouldCallServiceDeleteMethod() {
+    public void deleteUser_invokesServiceDeleteUser_whenDeleteUserInvoked() {
         // Arrange
         UUID id = UUID.randomUUID();
 
@@ -45,7 +45,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetAllUsersPagination() {
+    public void getAllUsers_returnIsOk_whenCorrectDataProvided() {
         int page = 2;
         int size = 10;
 
@@ -60,7 +60,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetAllUsersBadPaginationWrongPage() {
+    public void getAllUsers_returnBadRequest_whenPageNumberIsNegative() {
         int page = -1;
         int size = 1;
 
@@ -70,7 +70,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetAllUsersBadPaginationWrongSize() {
+    public void getAllUsers_returnBadRequest_whenPageSizeIsNegative() {
         int page = 1;
         int size = -1;
 
@@ -79,7 +79,7 @@ public class UserControllerTest {
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
     @Test
-    public void testServiceException() {
+    public void getAllUsers_returnBadRequest_whenServiceThrowsException() {
         int page = 2;
         int size = 10;
 
