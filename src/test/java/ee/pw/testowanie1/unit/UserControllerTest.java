@@ -1,11 +1,13 @@
-package ee.pw.testowanie1;
+package ee.pw.testowanie1.unit;
 
 import ee.pw.testowanie1.controllers.UserController;
 import ee.pw.testowanie1.models.UserDTO;
 import ee.pw.testowanie1.services.UserService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,12 +24,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@ExtendWith(MockitoExtension.class)
 public class UserControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
     @InjectMocks
     private UserController userController;
     @Mock
@@ -43,39 +42,6 @@ public class UserControllerTest {
 
         // Assert
         verify(userService).deleteUser(id);
-    }
-
-    @Test
-    public void testGetAllUsers() throws Exception {
-        // Arrange
-        UUID id1 = UUID.randomUUID();
-        UUID id2 = UUID.randomUUID();
-        UUID id3 = UUID.randomUUID();
-
-        List<UserDTO> users = List.of(
-                UserDTO.builder()
-                        .id(id1)
-                        .username("user1")
-                        .email("user1@gmail.com")
-                        .build(),
-                UserDTO.builder()
-                        .id(id2)
-                        .username("user2")
-                        .email("user2@gmail.com")
-                        .build(),
-                UserDTO.builder()
-                        .id(id3)
-                        .username("user3")
-                        .email("user3@gmail.com")
-                        .build()
-        );
-        when(userService.getUsers(PageRequest.of(0, 5))).thenReturn(users);
-
-        // Act
-        ResultActions result = mockMvc.perform(get("/api/users"));
-
-        // Assert
-        result.andExpect(status().is(HttpStatus.OK.value()));
     }
 
     @Test

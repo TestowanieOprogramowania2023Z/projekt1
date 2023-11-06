@@ -1,9 +1,10 @@
-package ee.pw.testowanie1.controllers;
+package ee.pw.testowanie1.integration;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ee.pw.testowanie1.controllers.PostController;
 import ee.pw.testowanie1.models.PostCreateDTO;
 import ee.pw.testowanie1.services.PostService;
 import java.util.UUID;
@@ -17,7 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = PostController.class)
-class PostControllerHTTPIntegrationTest {
+class PostControllerIntegrationTest {
   @Autowired
   private MockMvc mockMvc;
 

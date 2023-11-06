@@ -1,9 +1,11 @@
-package ee.pw.testowanie1;
+package ee.pw.testowanie1.unit;
 
 import ee.pw.testowanie1.models.User;
+import ee.pw.testowanie1.models.UserCreateDTO;
 import ee.pw.testowanie1.models.UserDTO;
 import ee.pw.testowanie1.repositories.UserRepository;
 import ee.pw.testowanie1.services.UserService;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,11 +14,13 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
 import org.springframework.data.mapping.PropertyReferenceException;
+import org.springframework.test.annotation.Rollback;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;

@@ -1,6 +1,8 @@
 package ee.pw.testowanie1.unit;
 
 import ee.pw.testowanie1.controllers.PostController;
+import ee.pw.testowanie1.models.Post;
+import ee.pw.testowanie1.models.PostCreateDTO;
 import ee.pw.testowanie1.models.PostDTO;
 import ee.pw.testowanie1.services.PostService;
 import org.junit.jupiter.api.Test;
@@ -17,8 +19,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PostControllerTest {
@@ -198,6 +199,42 @@ class PostControllerTest {
 
         // then
         assertEquals(HttpStatus.OK.value(), response.getStatusCode().value());
+    }
+
+    @Test
+    public void shouldCallServiceDeleteMethod() {
+        // Arrange
+        UUID id = UUID.randomUUID();
+
+        // Act
+        postController.deletePost(id);
+
+        // Assert
+        verify(postService).deletePost(id);
+    }
+
+    @Test
+    void updatePost_returnedStatusIsOk_whenProvidedCorrectData() {
+        //given
+        UUID properId = UUID.randomUUID();
+        PostCreateDTO properPostCreateDTO = new PostCreateDTO("content", properId);
+        //when
+        doNothing().when(postService).updatePost(any(UUID.class), any(PostCreateDTO.class));
+        ResponseEntity<Post> result = postController.updatePost(properId, properPostCreateDTO);
+        //then
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+    }
+
+    @Test
+    void updatePost_returnedStatusIsBadRequest_whenProvidedIncorrectData() {
+        //given
+        UUID correctId = UUID.randomUUID();
+        PostCreateDTO incorrectPostCreateDTO = new PostCreateDTO();
+        //when
+        doThrow(new NoSuchElementException()).when(postService).updatePost(any(UUID.class), any(PostCreateDTO.class));
+        ResponseEntity<Post> result = postController.updatePost(correctId, incorrectPostCreateDTO);
+        //then
+        assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
     }
 
 }

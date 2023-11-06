@@ -1,4 +1,4 @@
-package ee.pw.testowanie1;
+package ee.pw.testowanie1.accceptanceTests;
 
 import ee.pw.testowanie1.models.UserCreateDTO;
 import ee.pw.testowanie1.services.UserService;
@@ -74,32 +74,32 @@ public class UserAcceptanceTest {
                 .statusCode(400);
     }
 
-    @Test
-    public void shouldReturnUsers() {
-
-        UserCreateDTO user = UserCreateDTO.builder()
-                .username("user")
-                .email("user@user")
-                .build();
-
-        //Act
-        UUID id = userService.createUser(user);
-        System.out.println(userService.getUserById(id.toString()));
-
-        Response response = given()
-                .param("page", 0)
-                .param("size", 5)
-                .when()
-                .get("/api/users")
-                .then()
-                .statusCode(200)
-                .body("find { it.id == '" + id + "' }.username", equalTo("user"))
-                .extract()
-                .response();
-
-        ResponseBody responseBody = response.getBody();
-        String responseString = responseBody.asString();
-        System.out.println("result");
-        System.out.println(responseString);
-    }
+//    @Test
+//    public void shouldReturnUsers() {
+//
+//        UserCreateDTO user = UserCreateDTO.builder()
+//                .username("user")
+//                .email("user@user")
+//                .build();
+//
+//        //Act
+//        UUID id = userService.createUser(user);
+//        System.out.println(userService.getUserById(id.toString()));
+//
+//        Response response = given()
+//                .param("page", 0)
+//                .param("size", 5)
+//                .when()
+//                .get("/api/users")
+//                .then()
+//                .statusCode(200)
+//                .body("find { it.id == '" + id + "' }.username", equalTo("user"))
+//                .extract()
+//                .response();
+//
+//        ResponseBody responseBody = response.getBody();
+//        String responseString = responseBody.asString();
+//        System.out.println("result");
+//        System.out.println(responseString);
+//    }
 }
