@@ -6,9 +6,7 @@ import ee.pw.testowanie1.models.PostDTO;
 import ee.pw.testowanie1.models.User;
 import ee.pw.testowanie1.repositories.PostRepository;
 import ee.pw.testowanie1.services.PostService;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -19,7 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.annotation.Rollback;
 
 import java.util.*;
 
@@ -170,12 +167,12 @@ class PostServiceTest {
         UUID postID = UUID.randomUUID();
         String postContentBeforeUpdate = "Content before update";
         String postContentAfterUpdate = "Updated content";
-        PostCreateDTO postCreateDTO = new PostCreateDTO()
+        PostCreateDTO postCreateDTO = PostCreateDTO
                 .builder()
                 .content(postContentAfterUpdate)
                 .userId(postID)
                 .build();
-        Post post = new Post()
+        Post post = Post
                 .builder()
                 .id(postID)
                 .content(postContentBeforeUpdate)
@@ -205,9 +202,7 @@ class PostServiceTest {
         when(postRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
         //then
         Assertions.assertThrows(NoSuchElementException.class,
-                () -> {
-                    postService.updatePost(postID, postCreateDTO);
-                });
+                () -> postService.updatePost(postID, postCreateDTO));
     }
 
     @Test
@@ -219,7 +214,7 @@ class PostServiceTest {
         when(postRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
         try {
             postService.updatePost(postID, postCreateDTO);
-        } catch (NoSuchElementException ex) {
+        } catch (NoSuchElementException ignored) {
         }
         //then
         verify(postRepository, never()).save(any());

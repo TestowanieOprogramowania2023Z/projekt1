@@ -86,7 +86,7 @@ public class PostIntegrationTest {
 
     @Test
     void updatePost_shouldReturnIsBadRequest_whenDontProvidePostContent() throws Exception {
-        PostCreateDTO postCreateDTO = new PostCreateDTO().builder().userId(userId).build();
+        PostCreateDTO postCreateDTO = PostCreateDTO.builder().userId(userId).build();
 
         mockMvc.perform(put("/api/posts/{id}", userId).contentType("application/json")
                         .content(objectMapper.writeValueAsString(postCreateDTO)))
@@ -95,7 +95,7 @@ public class PostIntegrationTest {
 
     @Test
     void updatePost_shouldReturnIsBadRequest_whenDontProvidePostId() throws Exception {
-        PostCreateDTO postCreateDTO = new PostCreateDTO().builder().content(postContent).build();
+        PostCreateDTO postCreateDTO = PostCreateDTO.builder().content(postContent).build();
 
         mockMvc.perform(put("/api/posts/{id}", userId).contentType("application/json")
                         .content(objectMapper.writeValueAsString(postCreateDTO)))
@@ -104,7 +104,7 @@ public class PostIntegrationTest {
 
     @Test
     void updatePost_shouldReturnIsBadRequest_whenProvideIdOfNotExistingPost() throws Exception {
-        PostCreateDTO postCreateDTO = new PostCreateDTO().builder().userId(userId).content(postContent)
+        PostCreateDTO postCreateDTO = PostCreateDTO.builder().userId(userId).content(postContent)
                 .build();
 
         mockMvc.perform(put("/api/posts/{id}", userId).contentType("application/json")
@@ -115,7 +115,7 @@ public class PostIntegrationTest {
     @Test
     void updatePost_shouldReturnIsOk_whenProvideIdOfExistingPost() throws Exception {
 
-        PostCreateDTO postCreateDTO = new PostCreateDTO().builder().userId(userId).content(postContent)
+        PostCreateDTO postCreateDTO = PostCreateDTO.builder().userId(userId).content(postContent)
                 .build();
         UUID createdPostId = postService.createPost(postCreateDTO);
 

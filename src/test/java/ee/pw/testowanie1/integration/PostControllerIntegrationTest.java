@@ -33,14 +33,14 @@ class PostControllerIntegrationTest {
 
   @Test
   void updatePost_shouldReturnIsOk_whenIdIsProvidedInPath() throws Exception {
-    PostCreateDTO postCreateDTO = new PostCreateDTO().builder().build();
+    PostCreateDTO postCreateDTO = PostCreateDTO.builder().build();
     mockMvc.perform(put("/api/posts/{id}", userId).contentType("application/json")
         .content(objectMapper.writeValueAsString(postCreateDTO)))
         .andExpect(status().isOk());
   }
   @Test
   void updatePost_shouldReturnIsNotFound_whenIdIsNotProvidedInPath() throws Exception {
-    PostCreateDTO postCreateDTO = new PostCreateDTO().builder().content(postContent).build();
+    PostCreateDTO postCreateDTO = PostCreateDTO.builder().content(postContent).build();
     mockMvc.perform(put("/api/posts/").contentType("application/json")
             .content(objectMapper.writeValueAsString(postCreateDTO)))
         .andExpect(status().isNotFound());
