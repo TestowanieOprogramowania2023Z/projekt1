@@ -23,6 +23,7 @@ public class UserService {
     }
 
     public Optional<UserDTO> getUserByUsername(String username) {
+        if (username == null) throw new IllegalArgumentException("Username cannot be null");
         return userRepository.findByUsername(username).map(UserDTO::fromUser);
     }
 
@@ -31,6 +32,8 @@ public class UserService {
     }
 
     public UUID createUser(UserCreateDTO user) {
+        if (user == null) throw new IllegalArgumentException("User cannot be null");
+        
         var userWithTheSameUsername = userRepository.findByUsername(user.getUsername());
         if (userWithTheSameUsername.isPresent()) {
             throw new RuntimeException("User with this username already exists");
@@ -48,6 +51,7 @@ public class UserService {
     }
 
     public void deleteUser(UUID id) {
+        if (id == null) throw new IllegalArgumentException("Id cannot be null");
         userRepository.deleteById(id);
     }
 }
