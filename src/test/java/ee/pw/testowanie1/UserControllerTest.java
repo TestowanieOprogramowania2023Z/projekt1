@@ -94,15 +94,24 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetAllUsersBadPagination() {
+    public void testGetAllUsersBadPaginationWrongPage() {
         int page = -1;
-        int size = -1;
+        int size = 1;
 
         ResponseEntity<List<UserDTO>> responseEntity = userController.getAllUsers(page, size);
 
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
+    @Test
+    public void testGetAllUsersBadPaginationWrongSize() {
+        int page = 1;
+        int size = -1;
+
+        ResponseEntity<List<UserDTO>> responseEntity = userController.getAllUsers(page, size);
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+    }
     @Test
     public void testServiceException() {
         int page = 2;
