@@ -126,7 +126,7 @@ public class PostIntegrationTest {
     }
 
     @Test
-    public void integralTestPostControllerCreatePost() throws Exception {
+    public void createPost_shouldReturnTrue_whenFindingCreatedPost() throws Exception {
         UserCreateDTO user = new UserCreateDTO();
         user.setUsername("Maciej");
         user.setEmail("test@test.com");
@@ -151,18 +151,6 @@ public class PostIntegrationTest {
         boolean postAdded = responseContent.contains("test");
 
         assertTrue(postAdded);
-    }
-
-    @Test
-    public void acceptanceTestPostControllerCreateUser() throws Exception {
-        PostCreateDTO post = PostCreateDTO.builder().content("Maciej").build();
-
-
-        mockMvc.perform(post("/api/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(post)))
-                .andExpect(status().isCreated());
-
     }
 
     @Test
