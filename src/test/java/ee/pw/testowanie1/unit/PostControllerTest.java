@@ -202,7 +202,7 @@ class PostControllerTest {
     }
 
     @Test
-    public void shouldCallServiceDeleteMethod() {
+    public void deletePost_shouldInvokeServiceDeleteMethod_whenDeletePostInvoked() {
         // Arrange
         UUID id = UUID.randomUUID();
 
