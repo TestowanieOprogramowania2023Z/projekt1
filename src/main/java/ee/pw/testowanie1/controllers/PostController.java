@@ -4,6 +4,7 @@ import ee.pw.testowanie1.models.Post;
 import ee.pw.testowanie1.models.PostCreateDTO;
 import ee.pw.testowanie1.models.PostDTO;
 import ee.pw.testowanie1.services.PostService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +52,7 @@ public class PostController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Post> createPost(@RequestBody PostCreateDTO post) {
+    public ResponseEntity<Post> createPost(@RequestBody @Valid PostCreateDTO post) {
         try {
             return ResponseEntity.created(new URI(postService.createPost(post).toString())).build();
         } catch (Exception e) {

@@ -4,6 +4,7 @@ import ee.pw.testowanie1.models.User;
 import ee.pw.testowanie1.models.UserCreateDTO;
 import ee.pw.testowanie1.models.UserDTO;
 import ee.pw.testowanie1.services.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +49,7 @@ public class UserController {
     }
 
     @PostMapping("")
-    public ResponseEntity<User> createUser(@RequestBody UserCreateDTO user) {
+    public ResponseEntity<User> createUser(@RequestBody @Valid UserCreateDTO user) {
         try {
             return ResponseEntity.created(new URI(userService.createUser(user).toString())).build();
         }
