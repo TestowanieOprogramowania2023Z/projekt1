@@ -10,17 +10,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
+import org.springframework.data.mapping.PropertyReferenceException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -70,7 +71,7 @@ public class UserServiceTest {
 
         Page<User> page = new PageImpl<>(users);
 
-        Mockito.when(userRepository.findAll(Mockito.any(Pageable.class))).thenReturn(page);
+        when(userRepository.findAll(Mockito.any(Pageable.class))).thenReturn(page);
 
         List<UserDTO> userDTOs = userService.getUsers(PageRequest.of(0, 10));
 
@@ -85,4 +86,43 @@ public class UserServiceTest {
             assertEquals(expectedUser.getEmail(), actualUser.getEmail());
         }
     }
+
+    @Test
+    public void testPagination() {
+        Pageable pageable = PageRequest.of(0, 2);
+
+        when(userRepository.findAll(any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(new User(), new User())));
+
+        List<UserDTO> result = userService.getUsers(pageable);
+
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    public void testEmptyResult() {
+
+        Pageable pageable = PageRequest.of(0, 2);
+
+        when(userRepository.findAll(any(Pageable.class)))
+                .thenReturn(Page.empty());
+
+        List<UserDTO> result = userService.getUsers(pageable);
+
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    public void testEdgeCases() {
+
+        Pageable pageable = PageRequest.of(Integer.MAX_VALUE, 1);
+
+        when(userRepository.findAll(any(Pageable.class)))
+                .thenReturn(Page.empty());
+
+        List<UserDTO> result = userService.getUsers(pageable);
+        
+        assertEquals(0, result.size());
+    }
+
 }
